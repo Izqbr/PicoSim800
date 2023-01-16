@@ -4,8 +4,7 @@ import (
 		"strings"
 		"time"
 )
-  
-
+ 
 var (
 	APN string = "internet.beeline.ru"            // точка доступа выхода в интернет вашего сотового оператора
 	Connect_status bool = false
@@ -35,7 +34,7 @@ func Resp_modem(){
 	Serial.Write([]byte(AT+"\r\n")) 
 	
 
-	if /*strings.Compare(string(AT), "\r\nOK\r\n") == 0 &&*/ com == 0 && Connect_status == false {
+	if com == 0 && Connect_status == false {
 		com = 1
 		SIM800.Write([]byte("AT+CSTT=\"internet.beeline.ru\",\"beeline\",\"beeline\"\r\n"))  
 		time.Sleep(time.Millisecond * 200)
