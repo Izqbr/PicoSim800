@@ -2,8 +2,6 @@ package main
 
 import (
 	"machine"
-
-	//	"tinygo.org/x/drivers/hd44780i2c"
 )
 
 var (
@@ -25,16 +23,7 @@ func Configure(){
 		RX: machine.GP5,
 	})
 		
-/*
-	machine.I2C0.Configure(machine.I2CConfig{
-		Frequency: machine.TWI_FREQ_400KHZ,
-		SDA: machine.GP16 ,
-		SCL: machine.GP17,
-	})
 
-	
-	
-*/
 	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
 	btn.Configure(machine.PinConfig{Mode: machine.PinInputPullup})
 
