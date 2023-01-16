@@ -1,7 +1,8 @@
 package main
 
-import "machine"
-
+import (
+	"machine"
+)
 
 var (
 	led = machine.LED
