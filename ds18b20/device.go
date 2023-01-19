@@ -9,6 +9,8 @@ import (
 type Device interface{
 	
 	Init() bool
+	SendCommand(command uint8)
+	SendBit(bit uint8)
 }
 
 type device struct {
@@ -32,6 +34,24 @@ func (d *device) Init() bool{
 	status := d.load.Get()
 	time.Sleep(time.Microsecond * 500)
 	return status
+}
+
+func (d *device)SendCommand(command uint8) {
+	for i:=0;i<8;i++ {
+		d.SendBit(command >> i & 1)
+		time.Sleep(time.Microsecond * 5)
+} 
+	}
+func(d *device) SendBit(bit uint8) {
+	d.load.Configure(machine.PinConfig{Mode: machine.PinOutput})
+	d.load.Set(false)
+	if bit==1 {
+		time.Sleep(time.Microsecond * 2)
+	} else {time.Sleep(time.Microsecond * 65) } 
+	d.load.Set(true)	  
+	if bit == 1 {
+		time.Sleep(time.Microsecond * 65)
+	} else {time.Sleep(time.Microsecond * 2) }	
 }
 
 

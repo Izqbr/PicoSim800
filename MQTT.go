@@ -42,9 +42,9 @@ func MQTT_CONNECT(){
 	SIM800.Write([]byte(MQTT_pass)) // MQTT пароль
 	
   
-	MQTT_PUB ("user_f73fd7c4/C5/status", "Подключено");                                            // пакет публикации
-	MQTT_SUB ("user_f73fd7c4/C5/comand");                                                          // пакет подписки на присылаемые команды
-	MQTT_SUB ("user_f73fd7c4/C5/settimer");                                                        // пакет подписки на присылаемые значения таймера
+	MQTT_PUB ("user_xxxxxxxx/status", "Подключено");                                            // пакет публикации
+	MQTT_SUB ("user_xxxxxxxx/comand");                                                          // пакет подписки на присылаемые команды
+	MQTT_SUB ("user_xxxxxxxx/settimer");                                                        // пакет подписки на присылаемые значения таймера
 	
 	SIM800.WriteByte(0x1A)
 	broker = true
