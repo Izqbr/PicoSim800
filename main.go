@@ -32,8 +32,13 @@ func main()  {
 		if SIM800.Buffered() > 0 {Resp_modem()}    // если что-то пришло от SIM800 отправляем в Raspberry для разбора                              
 		if Serial.Buffered() > 0 {Resp_serial()}
 		time.Sleep(time.Millisecond * 4000)
+		dallas.Init()
 		dallas.SendCommand(0x44)
-		
+		//dallas.SendCommand(SKIP_ROM)
+		led2.High()
+		time.Sleep(time.Millisecond * 2000)
+		led2.Low()
+		time.Sleep(time.Millisecond * 2000)
 	}
 
 } 

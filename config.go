@@ -6,8 +6,8 @@ import (
 
 var (
 	led = machine.LED
-	led2 = machine.GP7
-	btn = machine.GP2
+	led2 = machine.GP16
+	
 )
 func Configure(){
 	machine.UART0.Configure(machine.UARTConfig{
@@ -22,14 +22,8 @@ func Configure(){
 		TX: machine.GP4,
 		RX: machine.GP5,
 	})
-		
-
+	
 	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
-	btn.Configure(machine.PinConfig{Mode: machine.PinInputPullup})
-
-	btn.SetInterrupt(machine.PinFalling|machine.PinRising,
-		func(p machine.Pin) {
-			led2.Set(!p.Get())
-			Serial.Write([]byte("Button is pressed \n\r"))
-		})
+	led2.Configure(machine.PinConfig{Mode: machine.PinOutput})
+	
 }
