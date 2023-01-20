@@ -86,4 +86,3 @@ func Resp_modem(){
 
 	AT = ""
 }
-
