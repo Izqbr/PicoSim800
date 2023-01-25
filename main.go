@@ -33,6 +33,7 @@ func main()  {
 		if Serial.Buffered() > 0 {Resp_serial()}
 		time.Sleep(time.Millisecond * 4000)
 		
+		
 		dallas.Init()
 		dallas.SendCommand(0x44)
 		//dallas.SendCommand(SKIP_ROM)
