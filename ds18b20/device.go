@@ -1,18 +1,16 @@
 package ds18b20
 
 import (
-	
+	"fmt"
 	"machine"
-	 "time"
-	
+	"time"
 )
 
-type Device interface{
-	
+type Device interface {
 	Init() bool
 	SendCommand(command uint8)
 	SendBit(bit uint8)
-	
+	GetTemp() string
 }
 
 type dallas struct {
@@ -20,13 +18,12 @@ type dallas struct {
 }
 
 func NewDevice(load machine.Pin) Device {
-	return &dallas {
+	return &dallas{
 		load: load,
 	}
 }
 
-
-func (dallas *dallas) Init() bool{
+func (dallas *dallas) Init() bool {
 	dallas.load.Configure(machine.PinConfig{Mode: machine.PinOutput})
 	dallas.load.Set(false) //низкий уровень
 	time.Sleep(time.Microsecond * 485)
@@ -38,22 +35,78 @@ func (dallas *dallas) Init() bool{
 	return status
 }
 
-func (dallas *dallas)SendCommand(command uint8) {
-	for i:=0;i<8;i++ {
+func (dallas *dallas) SendCommand(command uint8) {
+	for i := 0; i < 8; i++ {
 		dallas.SendBit(command >> i & 1)
 		time.Sleep(time.Microsecond * 5)
-} 
 	}
-func(dallas *dallas) SendBit(bit uint8) {
+}
+func (dallas *dallas) SendBit(bit uint8) {
 	dallas.load.Configure(machine.PinConfig{Mode: machine.PinOutput})
 	dallas.load.Set(false)
-	if bit==1 {
+	if bit == 1 {
 		time.Sleep(time.Microsecond * 2)
-	} else {time.Sleep(time.Microsecond * 65) } 
-	dallas.load.Set(true)	  
+	} else {
+		time.Sleep(time.Microsecond * 65)
+	}
+	dallas.load.Set(true)
 	if bit == 1 {
 		time.Sleep(time.Microsecond * 65)
-	} else {time.Sleep(time.Microsecond * 2) }	
+	} else {
+		time.Sleep(time.Microsecond * 2)
+	}
 }
 
+func (dallas *dallas) Readbyte() byte {
+	var data byte
+	for i := 0; i < 8; i++ {
+		data += dallas.ReadBit() << i
+	}
 
+	return data
+
+}
+
+func (dallas *dallas) ReadBit() byte {
+
+	var bit byte
+	dallas.load.Configure(machine.PinConfig{Mode: machine.PinOutput})
+	dallas.load.Set(false)
+	time.Sleep(time.Microsecond * 2)
+	dallas.load.Set(true)
+	time.Sleep(time.Microsecond * 13)
+	dallas.load.Configure(machine.PinConfig{Mode: machine.PinInput})
+
+	if dallas.load.Get() == false {
+		bit = 0
+	} else {
+		bit = 1
+	}
+	time.Sleep(time.Microsecond * 45)
+	return bit //вернем результат
+}
+
+func (dallas *dallas) GetTemp() string {
+
+	dallas.Init()
+	dallas.SendCommand(0xCC)
+	dallas.SendCommand(0x44)
+	time.Sleep(time.Millisecond * 750)
+	dallas.Init()
+	dallas.SendCommand(0xCC)
+	dallas.SendCommand(0xBE)
+	sign := ""
+	lbt := uint16(dallas.Readbyte())
+
+	hbt := uint16(dallas.Readbyte())
+	if hbt&128 == 0 {
+		sign = "+"
+	} else {
+		sign = "-"
+	}
+	temp := hbt<<8 | lbt
+	temperature := temp >> 4
+
+	return sign + fmt.Sprintf("%v", temperature/10) + fmt.Sprintf("%v", temperature%10)
+
+}
