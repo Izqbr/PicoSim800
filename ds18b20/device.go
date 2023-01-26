@@ -89,12 +89,12 @@ func (dallas *dallas) ReadBit() byte {
 func (dallas *dallas) GetTemp() string {
 
 	dallas.Init()
-	dallas.SendCommand(0xCC)
-	dallas.SendCommand(0x44)
+	dallas.SendCommand(SKIP_ROM)
+	dallas.SendCommand(CONVERT_T)
 	time.Sleep(time.Millisecond * 750)
 	dallas.Init()
-	dallas.SendCommand(0xCC)
-	dallas.SendCommand(0xBE)
+	dallas.SendCommand(SKIP_ROM)
+	dallas.SendCommand(READ_SCRETCHPAD)
 	sign := ""
 	lbt := uint16(dallas.Readbyte())
 
