@@ -1,8 +1,9 @@
 package ds18b20
 
 import (
-	"fmt"
+	
 	"machine"
+	"strconv"
 	"time"
 )
 
@@ -89,24 +90,25 @@ func (dallas *dallas) ReadBit() byte {
 func (dallas *dallas) GetTemp() string {
 
 	dallas.Init()
-	dallas.SendCommand(SKIP_ROM)
-	dallas.SendCommand(CONVERT_T)
+	dallas.SendCommand(0xcc)
+	dallas.SendCommand(0x44)
 	time.Sleep(time.Millisecond * 750)
 	dallas.Init()
-	dallas.SendCommand(SKIP_ROM)
-	dallas.SendCommand(READ_SCRETCHPAD)
+	dallas.SendCommand(0xcc)
+	dallas.SendCommand(0xbe)
 	sign := ""
 	lbt := uint16(dallas.Readbyte())
 
 	hbt := uint16(dallas.Readbyte())
 	if hbt&128 == 0 {
-		sign = "+"
-	} else {
 		sign = "-"
+	} else {
+		sign = "+"
 	}
 	temp := hbt<<8 | lbt
 	temperature := temp >> 4
-
-	return sign + fmt.Sprintf("%v", temperature/10) + fmt.Sprintf("%v", temperature%10)
+	t2 := strconv.FormatInt(int64(temperature),10)
+	return sign + string(t2)
+	
 
 }

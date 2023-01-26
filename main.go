@@ -35,10 +35,10 @@ func main() {
 
 		Serial.Write([]byte(T + "\r\n"))
 
-		led2.High()
-		time.Sleep(time.Millisecond * 2000)
-		led2.Low()
-		time.Sleep(time.Millisecond * 2000)
+		// led2.High()
+		// time.Sleep(time.Millisecond * 2000)
+		// led2.Low()
+		// time.Sleep(time.Millisecond * 2000)
 	}
 
 }
