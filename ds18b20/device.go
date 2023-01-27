@@ -1,9 +1,9 @@
 package ds18b20
 
 import (
-	
+	"fmt"
 	"machine"
-	"strconv"
+	
 	"time"
 )
 
@@ -12,6 +12,7 @@ type Device interface {
 	SendCommand(command uint8)
 	SendBit(bit uint8)
 	GetTemp() string
+	Readbyte() byte
 }
 
 type dallas struct {
@@ -37,6 +38,7 @@ func (dallas *dallas) Init() bool {
 }
 
 func (dallas *dallas) SendCommand(command uint8) {
+	dallas.load.Configure(machine.PinConfig{Mode: machine.PinOutput})
 	for i := 0; i < 8; i++ {
 		dallas.SendBit(command >> i & 1)
 		time.Sleep(time.Microsecond * 5)
@@ -90,25 +92,27 @@ func (dallas *dallas) ReadBit() byte {
 func (dallas *dallas) GetTemp() string {
 
 	dallas.Init()
-	dallas.SendCommand(0xcc)
-	dallas.SendCommand(0x44)
+	dallas.SendCommand(SKIP_ROM)
+	dallas.SendCommand(CONVERT_T)
 	time.Sleep(time.Millisecond * 750)
 	dallas.Init()
-	dallas.SendCommand(0xcc)
-	dallas.SendCommand(0xbe)
+	dallas.SendCommand(SKIP_ROM)
+	dallas.SendCommand(READ_SCRETCHPAD)
 	sign := ""
 	lbt := uint16(dallas.Readbyte())
-
+	dr:= (lbt & 0b1111)/16
+	
 	hbt := uint16(dallas.Readbyte())
 	if hbt&128 == 0 {
-		sign = "-"
-	} else {
 		sign = "+"
+	} else {
+		sign = "-"
 	}
 	temp := hbt<<8 | lbt
+	
 	temperature := temp >> 4
-	t2 := strconv.FormatInt(int64(temperature),10)
-	return sign + string(t2)
+	//temperature := 0x19
+	return sign + fmt.Sprintf("%d",temperature)+"."+ fmt.Sprintf("%1d",dr)
 	
 
 }

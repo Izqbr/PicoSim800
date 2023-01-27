@@ -1,7 +1,7 @@
 package ds18b20
 
 const (
-	SKIP_ROM          = 0xCC
+	SKIP_ROM      uint8    = 0xCC
 	READ_ROM         byte = 0x33
 	MATCH_ROM        byte = 0x55
 	SEARCH_ROM       byte = 0xF0

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"PicoSim800/buzzer"
 	"PicoSim800/ds18b20"
 	"machine"
 	"time"
@@ -17,8 +18,8 @@ var (
 func main() {
 	Configure()
 
-	dallas := ds18b20.NewDevice(machine.GP13)
-
+	dat := ds18b20.NewDevice(machine.GP2)
+	buzzer := buzzer.NewBuzzer(machine.GP15)
 	for {
 		//  if Connect_status != true {
 		// 	SIM800.Write([]byte("AT\r\n"))  //посылаем в GSM модуль
@@ -29,16 +30,27 @@ func main() {
 		if Serial.Buffered() > 0 {
 			Resp_serial()
 		}
-		time.Sleep(time.Millisecond * 4000)
-
-		T := dallas.GetTemp()
-
-		Serial.Write([]byte(T + "\r\n"))
-
-		// led2.High()
-		// time.Sleep(time.Millisecond * 2000)
-		// led2.Low()
-		// time.Sleep(time.Millisecond * 2000)
+		time.Sleep(time.Millisecond * 1000)
+		buzzer.Beep(200,2)
+		 T := dat.GetTemp()
+		 println(T)
+		// dat.Init()
+	// dat.SendCommand(0xcc)
+	// dat.SendCommand(0x44)
+	// time.Sleep(time.Millisecond * 750)
+	// dat.Init()
+	// dat.SendCommand(0xcc)
+	// dat.SendCommand(0xbe)
+	
+	// lbt := uint16(dat.Readbyte())
+	// 	println(lbt)
+	// hbt := uint16(dat.Readbyte())
+	// 	println(hbt)
+	
+		led.High()
+		time.Sleep(time.Millisecond * 750)
+		led.Low()
+		time.Sleep(time.Millisecond * 750)
 	}
 
 }
