@@ -99,10 +99,12 @@ func (dallas *dallas) GetTemp() string {
 	dallas.SendCommand(SKIP_ROM)
 	dallas.SendCommand(READ_SCRETCHPAD)
 	sign := ""
+
 	lbt := uint16(dallas.Readbyte())
-	dr:= (lbt & 0b1111)/16
 	
+
 	hbt := uint16(dallas.Readbyte())
+
 	if hbt&128 == 0 {
 		sign = "+"
 	} else {
@@ -110,9 +112,10 @@ func (dallas *dallas) GetTemp() string {
 	}
 	temp := hbt<<8 | lbt
 	
-	temperature := temp >> 4
-	//temperature := 0x19
-	return sign + fmt.Sprintf("%d",temperature)+"."+ fmt.Sprintf("%1d",dr)
+	t:= float64((temp&0x07FF)>>4)
+	t += float64(temp&0x000F) / 16.0
+	
+	return sign + fmt.Sprintf("%.2f",t)
 	
 
 }
