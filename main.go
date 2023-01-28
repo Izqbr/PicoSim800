@@ -24,17 +24,16 @@ func main() {
 
 	// timer fires 10 times per second
 	arm.SetupSystemTimer(machine.CPUFrequency() / 10)
-
-	
 	
 	dallas := ds18b20.NewDevice(machine.GP2)
 	buzzer := buzzer.NewBuzzer(machine.GP15)
+	
 	for {
 
 
 		if Connect_status != true && comconnect == false {
 		 	SIM800.Write([]byte("AT\r\n"))  //посылаем в GSM модуль
-		 }
+		}
 		if SIM800.Buffered() > 0 {
 			Resp_modem()
 		} // если что-то пришло от SIM800 отправляем в Raspberry для разбора
@@ -43,8 +42,8 @@ func main() {
 		}
 		time.Sleep(time.Millisecond * 1000)
 		buzzer.Beep(200,2)
-		 T := dallas.GetTemp()
-		 println(T)
+		T := dallas.GetTemp()
+		println(T)
 		
 		led.High()
 		time.Sleep(time.Millisecond * 750)
