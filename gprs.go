@@ -62,7 +62,7 @@ func Resp_modem(){
 	} else if strings.Compare(string(AT), "\r\nCONNECT OK\r\n") == 0 {
 		led.High()
 		Connect_status = true
-		//MQTT_CONNECT()
+		MQTT_CONNECT()
 
 	} else if strings.Compare(string(AT), "\r\nCLOSED\r\n") == 0 {
 		comconnect = false
