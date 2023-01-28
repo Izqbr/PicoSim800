@@ -23,6 +23,9 @@ func Configure(){
 		RX: machine.GP5,
 	})
 	
+
+
+
 	led.Configure(machine.PinConfig{Mode: machine.PinOutput})
 	led2.Configure(machine.PinConfig{Mode: machine.PinOutput})
 	

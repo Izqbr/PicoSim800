@@ -34,29 +34,30 @@ func Resp_modem(){
 	Serial.Write([]byte(AT+"\r\n")) 
 	
 
-	if com == 0 && Connect_status == false {
+	if strings.Compare(string(AT), "\r\nOK\r\n") == 0 && com == 0 && Connect_status == false {
+		comconnect = true
 		com = 1
 		SIM800.Write([]byte("AT+CSTT=\"internet.beeline.ru\",\"beeline\",\"beeline\"\r\n"))  
 		time.Sleep(time.Millisecond * 200)
-		Serial.Write([]byte("send command  1"))
+		println("send command  1")
         
 	} else if strings.Compare(string(AT), "\r\nOK\r\n") == 0 && com == 1 && Connect_status == false {
 		com = 2 
 		SIM800.Write([]byte("AT+CIICR\r\n"))  //настройка контекста
 		time.Sleep(time.Millisecond * 200)
-		Serial.Write([]byte("send command  2")) 
+		println("send command  2")
 
 	} else if strings.Compare(string(AT), "\r\nOK\r\n") == 0 && com == 2 && Connect_status == false {
 		com = 3
 		SIM800.Write([]byte("AT+CIFSR\r\n"))  //запрос IP
 		time.Sleep(time.Millisecond * 200)
-		Serial.Write([]byte("send command  3")) 
+		println("send command  3") 
 
 	} else if strings.Count(string(AT), "0.0.0.0") != 1 && com == 3 && Connect_status == false {
 		com = 4
 		SIM800.Write([]byte("AT+CIPSTART=\"TCP\",\"srv2.clusterfly.ru\",\"9991\"\r\n"))
 		time.Sleep(time.Millisecond * 1000)
-		Serial.Write([]byte("send command  4")) 
+		println("send command  4")
 	
 	} else if strings.Compare(string(AT), "\r\nCONNECT OK\r\n") == 0 {
 		led.High()
@@ -64,6 +65,7 @@ func Resp_modem(){
 		//MQTT_CONNECT()
 
 	} else if strings.Compare(string(AT), "\r\nCLOSED\r\n") == 0 {
+		comconnect = false
 		led.Low()
 		Connect_status = false
 		SIM800.Write([]byte("AT+CIPSTART=\"TCP\",\"srv2.clusterfly.ru\",\"9991\"\r\n"))
@@ -81,7 +83,7 @@ func Resp_modem(){
 		SIM800.Write([]byte("AT+CFUN=1,1\r\n"))  //посылаем в GSM модуль ALREADY CONNECT
 		time.Sleep(time.Millisecond * 3000)
 		SIM800.Write([]byte("AT\r\n"))  //посылаем в GSM модуль ALREADY CONNECT
-		Serial.Write([]byte("SIM800 is reset")) 
+		println("SIM800 is reset")
 	}
 
 	AT = ""
