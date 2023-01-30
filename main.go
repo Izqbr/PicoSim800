@@ -10,13 +10,7 @@ import (
 )
 
 var (
-	Serial      = machine.UART0
-	SIM800      = machine.UART1
-	MQTT_SERVER = "srv.clusterfly.ru"
-	PORT        = "9991"
-	AT          = ""
-	comconnect  = false
-	timerCh = make(chan struct{}, 1)
+	
 )
 
 func main() {
@@ -32,7 +26,8 @@ func main() {
 
 
 		if Connect_status != true && comconnect == false {
-		 	SIM800.Write([]byte("AT\r\n"))  //посылаем в GSM модуль
+		 	SIM800.Write([]byte("AT\r\n"))  //
+			println("посылаем в GSM модуль AT")
 		}
 		if SIM800.Buffered() > 0 {
 			Resp_modem()
@@ -42,8 +37,12 @@ func main() {
 		}
 		time.Sleep(time.Millisecond * 1000)
 		buzzer.Beep(200,2)
-		T := dallas.GetTemp()
-		println(T)
+		
+		if Connect_status==true {
+			T := dallas.GetTemp()
+			println(T)
+		} 
+		
 		
 		led.High()
 		time.Sleep(time.Millisecond * 750)

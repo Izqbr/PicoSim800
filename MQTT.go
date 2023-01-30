@@ -5,11 +5,7 @@ import (
 )
 
 var (
-	MQTT_type string = "MQIsdp"
-	MQTT_CID string = "Lada"
-	MQTT_user string = "user_xxxxxxxx"
-	MQTT_pass string = "pass_xxxxxxxx"
-	broker bool = false
+	
 )
 
 func MQTT_CONNECT(){
