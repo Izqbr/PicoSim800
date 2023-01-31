@@ -39,6 +39,7 @@ func Resp_modem(){
 		com = 1
 		SIM800.Write([]byte("AT+CSTT=\"internet.beeline.ru\",\"beeline\",\"beeline\"\r\n"))  
 		time.Sleep(time.Millisecond * 200)
+		println(AT)
 		println("send command  1")
         
 	} else if strings.Compare(string(AT), "\r\nOK\r\n") == 0 && com == 1 && Connect_status == false {
@@ -79,10 +80,11 @@ func Resp_modem(){
 		SIM800.Write([]byte("AT+CFUN=1,1\r\n"))  //посылаем в GSM модуль 
 
 	} else if strings.Count(string(AT), "+CME ERROR:") == 1 {
-		//led.High()
-		SIM800.Write([]byte("AT+CFUN=1,1\r\n"))  //посылаем в GSM модуль ALREADY CONNECT
+		com = 0
+		SIM800.Write([]byte("AT+CFUN=1,1\r\n"))  //
 		time.Sleep(time.Millisecond * 3000)
-		SIM800.Write([]byte("AT\r\n"))  //посылаем в GSM модуль ALREADY CONNECT
+		SIM800.Write([]byte("AT\r\n"))  //посылаем в
+		println(AT)
 		println("SIM800 is reset")
 	}
 

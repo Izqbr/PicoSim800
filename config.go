@@ -6,7 +6,7 @@ import (
 
 var (
 	led = machine.LED
-	led2 = machine.GP16
+	led2 = machine.GP9
 
 	MQTT_type string = "MQIsdp"
 	MQTT_CID string = "Lada"
